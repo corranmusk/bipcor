@@ -2,4 +2,6 @@ flask
 flask-bootstrap
 flask-wtf
 flask-nav
+flask-sqlalchemy
+flask-migrate
 python-dotenv
