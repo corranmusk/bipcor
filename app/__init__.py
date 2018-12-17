@@ -18,5 +18,9 @@ app.register_blueprint(errors_bp)
 from app.main import bp as main_bp
 app.register_blueprint(main_bp)
 
+from app.api import bp as app_bp
+app.register_blueprint(app_bp, url_prefix="/api")
+
 #from app.auth import bp as auth_bp
 #app.register_blueprint(auth_bp)
+from app import models
