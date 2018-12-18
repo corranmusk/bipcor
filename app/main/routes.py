@@ -15,7 +15,8 @@ def currentlyBanned():
     return render_template(
         'main/currentlybanned.html',
         title="Currently Banned",
-        bannedIPs=BadIPReport.query.all())
+        bannedIPs=BadIPReport.query.filter(BadIPReport.expires>datetime.utcnow())
+    )
 
 @bp.route('/report',methods=['GET','POST'])
 def reportBadIP():
