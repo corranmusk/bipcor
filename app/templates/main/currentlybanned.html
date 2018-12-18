@@ -3,4 +3,26 @@
 
 {% block app_content %}
   <h1>{{ title }}</h1>
+  <table class="table table-hover">
+  <thead>
+    <th>ID</th>
+    <th>BadIP</th>
+    <th>SourceIP</th>
+    <th>Reported</th>
+    <th>Ban Expires</th>
+    <th>Notes</th>
+  </thead>
+  <tbody>
+  {% for bannedIP in bannedIPs %}
+  <tr>
+    <td> {{ bannedIP.id }}</td>
+    <td> {{ bannedIP.badIP }}</td>
+    <td> {{ bannedIP.source }}</td>
+    <td> {{ bannedIP.reported }}</td>
+    <td> {{ bannedIP.expires }}</td>
+    <td> {{ bannedIP.notes }}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 #class User(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
@@ -14,8 +15,11 @@ class BadIPReport(db.Model):
     source = db.Column(db.String(20), index=True)
     badIP = db.Column(db.String(20), index=True)
     notes = db.Column(db.String(180))
-    reported = db.Column(db.DateTime)
+    reported = db.Column(db.DateTime, default=datetime.utcnow())
     expires = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<BadIPReport {}>'.format(self.id)
 
 class AccessToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +28,9 @@ class AccessToken(db.Model):
     validTo = db.Column(db.DateTime)
     token = db.Column(db.String(32), index=True)
     lastUsed = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<AccessToken {}>'.format(self.id)
 
     def check_token(token,ipAddr):
         accesstoken = AccessToken.query.filter_by(token=token).first()
