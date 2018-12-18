@@ -7,6 +7,12 @@ nav = Nav()
 def mynavbar():
     return Navbar(
         'BIPCOR',
+        Subgroup(
+            'Reports',
+            View('Summary', 'main.summary'),
+            View('List burrently banned','main.currentlyBanned'),
+            View('Add Report','main.reportBadIP')
+        )
 #        Subgroup(
 #            'Hosts',
 #            View('List Hosts', 'main.hosts'),
