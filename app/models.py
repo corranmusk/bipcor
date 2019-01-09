@@ -24,10 +24,11 @@ class BadIPReport(db.Model):
 class AccessToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     ipAddr= db.Column(db.String(20))
-    validFrom = db.Column(db.DateTime)
+    validFrom = db.Column(db.DateTime, default=datetime.utcnow())
     validTo = db.Column(db.DateTime)
     token = db.Column(db.String(32), index=True)
     lastUsed = db.Column(db.DateTime)
+    notes = db.Column(db.Text)
 
     def __repr__(self):
         return '<AccessToken {}>'.format(self.id)

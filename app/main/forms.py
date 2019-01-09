@@ -16,3 +16,13 @@ class AddBadIP(FlaskForm):
         validators=[DataRequired()]
     )
     submit = SubmitField('Ban IP')
+
+class GenerateToken(FlaskForm):
+    tokenIP=StringField(
+        'IP Address to use token',
+        validators=[DataRequired(), IPAddress()]
+    )
+    notes=StringField(
+        'Notes',
+    )
+    submit = SubmitField('Generate token')

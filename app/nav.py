@@ -11,13 +11,14 @@ def mynavbar():
             'Reports',
             View('Summary', 'main.summary'),
             View('List burrently banned','main.currentlyBanned'),
-            View('Add Report','main.reportBadIP')
-        )
-#        Subgroup(
-#            'Hosts',
-#            View('List Hosts', 'main.hosts'),
-#            View('Add Host', 'main.addhost'),
-#        ),
+            View('Add Report','main.reportBadIP'),
+        ),
+        Subgroup(
+            'Tokens',
+            View('Generate Token','main.generateToken'),
+            View('List Tokens', 'main.listTokens'),
+            View('Summary', 'main.tokenSummary'),
+        ),
 #        Subgroup(
 #            'Contacts',
 #            View('List Contacts', 'main.contacts'),
