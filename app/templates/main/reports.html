@@ -18,8 +18,8 @@
     <td> {{ bannedIP.id }}</td>
     <td> {{ bannedIP.badIP }}</td>
     <td> {{ bannedIP.source }}</td>
-    <td> {{ bannedIP.reported }}</td>
-    <td> {{ bannedIP.expires }}</td>
+    <td> {{ bannedIP.reported | formatdatetime }}</td>
+    <td> {{ bannedIP.expires | formatdatetime }}</td>
     <td> {{ bannedIP.notes }}
   </tr>
   {% endfor %}

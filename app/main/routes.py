@@ -1,9 +1,10 @@
 from flask import render_template, flash
 from app import db
-from app.models import BadIPReport
+from app.models import BadIPReport,AccessToken
 from app.main import bp
 from app.main.forms import AddBadIP,GenerateToken
 from datetime import datetime, timedelta
+import secrets
 
 @bp.route('/')
 @bp.route('/summary')
@@ -13,9 +14,17 @@ def summary():
 @bp.route('/banned')
 def currentlyBanned():
     return render_template(
-        'main/currentlybanned.html',
+        'main/reports.html',
         title="Currently Banned",
         bannedIPs=BadIPReport.query.filter(BadIPReport.expires>datetime.utcnow())
+    )
+
+@bp.route('/allreports')
+def allReports():
+    return render_template(
+        'main/reports.html',
+        title="All Reports",
+        bannedIPs=BadIPReport.query.all()
     )
 
 @bp.route('/report',methods=['GET','POST'])
@@ -38,16 +47,25 @@ def reportBadIP():
 def generateToken():
     form=GenerateToken()
     if form.validate_on_submit():
-        # Generate a getToken
+        newtoken=AccessToken()
+        newtoken.ipAddr=form.tokenIP.data
+        newtoken.token=secrets.token_hex(20)
+        newtoken.notes=form.notes.data
         # Add to database
+        db.session.add(newtoken)
+        db.session.commit()
         # Show token
-        flash('Token generated for {}:{}'.format("ipaddr","token"))
+        flash('Token generated for {}:{}'.format(newtoken.ipAddr,newtoken.token))
 
     return render_template('main/generatetoken.html',title="Generate Token",form=form)
 
 @bp.route('/token/list')
 def listTokens():
-    pass
+    return render_template(
+       'main/tokenlist.html',
+       title="Tokens",
+       tokens=AccessToken.query.all()
+    )
 
 @bp.route('/token/summary')
 @bp.route('/token')
