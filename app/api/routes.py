@@ -8,7 +8,7 @@ from datetime import datetime
 def currentlyBanned():
     return render_template(
         'api/banned.html',
-        bannedIPs=BadIPReport.query.filter(BadIPReport.expires>datetime.utcnow())
+        bannedIPs=db.session.query(BadIPReport.badIP).filter(BadIPReport.expires>datetime.utcnow()).distinct()
     )
 @bp.route('/report')
 def reportBadIP():
