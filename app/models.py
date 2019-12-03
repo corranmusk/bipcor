@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime
+from sqlalchemy import desc
 
 #class User(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
@@ -34,8 +35,15 @@ class AccessToken(db.Model):
         return '<AccessToken {}>'.format(self.id)
 
     def check_token(token,ipAddr):
-        accesstoken = AccessToken.query.filter_by(token=token).first()
-        if accesstoken is None or accesstoken.validTo < datetime.utcnow():
-            return None
-        return accesstoken
+        accesstoken = AccessToken.query.order_by(desc(AccessToken.validFrom)).filter_by(token=token,ipAddr=ipAddr).first()
+        if (accesstoken is not None):
+            # We have a result
+            if accesstoken.validTo:
+                # Check that date is valid
+                if accesstoken.validTo < datetime.utcnow():
+                    return True
+            else:
+                # No end date set so okay
+                return True
+        return False
 #class LogEntry(db.Model)

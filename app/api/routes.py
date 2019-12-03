@@ -1,13 +1,9 @@
 from flask import render_template
 from flask import abort,jsonify,make_response,request
 from app.api import bp
-from app.models import BadIPReport
+from app.models import BadIPReport,AccessToken
 from app import db
 from datetime import datetime,timedelta
-
-def validateToken(token,ipAddr):
-    #Check that token matches IP Address. Returns true or false
-    return True
 
 @bp.errorhandler(404)
 def not_found(error):
@@ -26,7 +22,7 @@ def reportBadIP():
     reportingIP=request.remote_addr
     badIP=request.json.get('badIP')
     notes=request.json.get('notes')
-    if validateToken(token,reportingIP):
+    if AccessToken.check_token(token,reportingIP):
         #need to validate data
         #update database
         newreport=BadIPReport()
