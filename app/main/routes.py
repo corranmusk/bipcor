@@ -1,15 +1,19 @@
-from flask import render_template, flash
+from flask import render_template, flash, redirect, url_for
 from app import db
-from app.models import BadIPReport,AccessToken
+from app.models import BadIPReport,AccessToken,LogEntry
 from app.main import bp
-from app.main.forms import AddBadIP,GenerateToken
+from app.main.forms import AddBadIP,GenerateToken,AddLogEntry
 from datetime import datetime, timedelta
+from sqlalchemy import desc,func
 import secrets
 
 @bp.route('/')
 @bp.route('/summary')
 def summary():
-    return render_template('main/summary.html',title="Summary")
+    toptenBadIPs=db.session.query(
+        BadIPReport.badIP,func.count(BadIPReport.badIP)
+    ).group_by(BadIPReport.badIP).order_by(desc(func.count(BadIPReport.badIP))).limit(10).all()
+    return render_template('main/summary.html',toptenBadIPs=toptenBadIPs,title="Summary")
 
 @bp.route('/banned')
 def currentlyBanned():
@@ -71,3 +75,26 @@ def listTokens():
 @bp.route('/token')
 def tokenSummary():
     pass
+
+
+@bp.route('/showlog')
+def showLog():
+    return render_template(
+        'main/log.html',
+        title="Event log",
+        entries=LogEntry.query.order_by(desc(LogEntry.logtime)).all()
+    )
+
+@bp.route('/addlog',methods=['GET','POST'])
+def addLogEntry():
+    form=AddLogEntry()
+    if form.validate_on_submit():
+        newlogentry=LogEntry()
+        newlogentry.loglevel=form.loglevel.data
+        newlogentry.detail=form.detail.data
+        db.session.add(newlogentry)
+        db.session.commit()
+        flash('Log entry {} added.'.format(newlogentry.id))
+        return redirect(url_for('main.showLog'))
+
+    return render_template('main/qf.html',title="Add Log Entry",form=form)

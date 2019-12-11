@@ -23,8 +23,6 @@ def reportBadIP():
     badIP=request.json.get('badIP')
     notes=request.json.get('notes')
     if AccessToken.check_token(token,reportingIP):
-        #need to validate data
-        #update database
         newreport=BadIPReport()
         newreport.badIP=badIP
         newreport.notes=notes

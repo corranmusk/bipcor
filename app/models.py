@@ -34,6 +34,9 @@ class AccessToken(db.Model):
     def __repr__(self):
         return '<AccessToken {}>'.format(self.id)
 
+    def updatelastused(token,ipAddr):
+        pass
+
     def check_token(token,ipAddr):
         accesstoken = AccessToken.query.order_by(desc(AccessToken.validFrom)).filter_by(token=token,ipAddr=ipAddr).first()
         if (accesstoken is not None):
@@ -46,4 +49,12 @@ class AccessToken(db.Model):
                 # No end date set so okay
                 return True
         return False
-#class LogEntry(db.Model)
+
+class LogEntry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    logtime = db.Column(db.DateTime, default=datetime.utcnow())
+    loglevel = db.Column(db.String(8))
+    detail = db.Column(db.Text)
+
+    def __repr__(self):
+        return '<LogEntry {}>'.format(self.id)

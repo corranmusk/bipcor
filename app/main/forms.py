@@ -26,3 +26,14 @@ class GenerateToken(FlaskForm):
         'Notes',
     )
     submit = SubmitField('Generate token')
+
+class AddLogEntry(FlaskForm):
+    loglevel=StringField(
+        'Level of log',
+        validators=[DataRequired()]
+    )
+    detail = StringField(
+        'Log Information',
+        validators=[DataRequired()]
+    )
+    submit = SubmitField('Add Log Entry')

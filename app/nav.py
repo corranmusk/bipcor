@@ -20,6 +20,11 @@ def mynavbar():
             View('List Tokens', 'main.listTokens'),
             View('Summary', 'main.tokenSummary'),
         ),
+        Subgroup(
+            'Log',
+            View('Show Log','main.showLog'),
+            View('Add Entry','main.addLogEntry'),
+        )
 #        Subgroup(
 #            'Contacts',
 #            View('List Contacts', 'main.contacts'),
