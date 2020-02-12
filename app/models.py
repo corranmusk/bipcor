@@ -2,7 +2,7 @@ from app import db
 from datetime import datetime
 from sqlalchemy import desc
 
-#class User(db.Model):
+# class User(db.Model):
 #    id = db.Column(db.Integer, primary_key=True)
 #    username = db.Column(db.String(64), index=True, unique=True)
 #    email = db.Column(db.String(120), index=True, unique=True)
@@ -10,6 +10,7 @@ from sqlalchemy import desc
 #
 #    def __repr__(self):
 #        return '<User {}>'.format(self.username)
+
 
 class BadIPReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,11 +21,12 @@ class BadIPReport(db.Model):
     expires = db.Column(db.DateTime)
 
     def __repr__(self):
-        return '<BadIPReport {}>'.format(self.id)
+        return "<BadIPReport {}>".format(self.id)
+
 
 class AccessToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    ipAddr= db.Column(db.String(20))
+    ipAddr = db.Column(db.String(20))
     validFrom = db.Column(db.DateTime, default=datetime.utcnow())
     validTo = db.Column(db.DateTime)
     token = db.Column(db.String(32), index=True)
@@ -32,14 +34,18 @@ class AccessToken(db.Model):
     notes = db.Column(db.Text)
 
     def __repr__(self):
-        return '<AccessToken {}>'.format(self.id)
+        return "<AccessToken {}>".format(self.id)
 
-    def updatelastused(token,ipAddr):
+    def updatelastused(token, ipAddr):
         pass
 
-    def check_token(token,ipAddr):
-        accesstoken = AccessToken.query.order_by(desc(AccessToken.validFrom)).filter_by(token=token,ipAddr=ipAddr).first()
-        if (accesstoken is not None):
+    def check_token(token, ipAddr):
+        accesstoken = (
+            AccessToken.query.order_by(desc(AccessToken.validFrom))
+            .filter_by(token=token, ipAddr=ipAddr)
+            .first()
+        )
+        if accesstoken is not None:
             # We have a result
             if accesstoken.validTo:
                 # Check that date is valid
@@ -50,6 +56,7 @@ class AccessToken(db.Model):
                 return True
         return False
 
+
 class LogEntry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     logtime = db.Column(db.DateTime, default=datetime.utcnow())
@@ -57,4 +64,4 @@ class LogEntry(db.Model):
     detail = db.Column(db.Text)
 
     def __repr__(self):
-        return '<LogEntry {}>'.format(self.id)
+        return "<LogEntry {}>".format(self.id)
