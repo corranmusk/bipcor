@@ -1,7 +1,7 @@
 from flask import render_template
 from flask import abort, jsonify, make_response, request
 from app.api import bp
-from app.models import BadIPReport, AccessToken
+from app.models import IPReport, AccessToken
 from app import db
 from datetime import datetime, timedelta
 
@@ -15,21 +15,21 @@ def not_found(error):
 def currentlyBanned():
     return render_template(
         "api/banned.html",
-        bannedIPs=db.session.query(BadIPReport.badIP)
-        .filter(BadIPReport.expires > datetime.utcnow())
+        bannedIPs=db.session.query(IPReport.IPAddr)
+        .filter(IPReport.expires > datetime.utcnow())
         .distinct(),
     )
 
 
 @bp.route("/report", methods=["POST"])
-def reportBadIP():
+def reportIPAddr():
     token = request.json.get("token")
     reportingIP = request.remote_addr
-    badIP = request.json.get("badIP")
+    IPAddr = request.json.get("IPAddr")
     notes = request.json.get("notes")
     if AccessToken.check_token(token, reportingIP):
-        newreport = BadIPReport()
-        newreport.badIP = badIP
+        newreport = IPReport()
+        newreport.IPAddr = IPAddr
         newreport.notes = notes
         newreport.source = reportingIP
         newreport.reported = datetime.utcnow()
@@ -38,7 +38,7 @@ def reportBadIP():
         db.session.commit()
     else:
         abort(401)
-    return jsonify({"badIP": badIP}), 200
+    return jsonify({"IPAddr": IPAddr}), 200
 
 
 @bp.route("/gettoken")

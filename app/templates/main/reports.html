@@ -6,7 +6,7 @@
   <table class="table table-hover">
   <thead>
     <th>ID</th>
-    <th>BadIP</th>
+    <th>IPAddr</th>
     <th>SourceIP</th>
     <th>Reported</th>
     <th>Ban Expires</th>
@@ -16,7 +16,7 @@
   {% for bannedIP in bannedIPs %}
   <tr>
     <td> {{ bannedIP.id }}</td>
-    <td> {{ bannedIP.badIP }}</td>
+    <td> {{ bannedIP.IPAddr }}</td>
     <td> {{ bannedIP.source }}</td>
     <td> {{ bannedIP.reported | formatdatetime }}</td>
     <td> {{ bannedIP.expires | formatdatetime }}</td>

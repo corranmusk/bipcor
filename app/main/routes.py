@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for
 from app import db
-from app.models import BadIPReport, AccessToken, LogEntry
+from app.models import IPReport, AccessToken, LogEntry
 from app.main import bp
-from app.main.forms import AddBadIP, GenerateToken, AddLogEntry
+from app.main.forms import AddIPAddr, GenerateToken, AddLogEntry
 from datetime import datetime, timedelta
 from sqlalchemy import desc, func
 import secrets
@@ -12,9 +12,9 @@ import secrets
 @bp.route("/summary")
 def summary():
     toptenBadIPs = (
-        db.session.query(BadIPReport.badIP, func.count(BadIPReport.badIP))
-        .group_by(BadIPReport.badIP)
-        .order_by(desc(func.count(BadIPReport.badIP)))
+        db.session.query(IPReport.IPAddr, func.count(IPReport.IPAddr))
+        .group_by(IPReport.IPAddr)
+        .order_by(desc(func.count(IPReport.IPAddr)))
         .limit(10)
         .all()
     )
@@ -28,23 +28,23 @@ def currentlyBanned():
     return render_template(
         "main/reports.html",
         title="Currently Banned",
-        bannedIPs=BadIPReport.query.filter(BadIPReport.expires > datetime.utcnow()),
+        bannedIPs=IPReport.query.filter(IPReport.expires > datetime.utcnow()),
     )
 
 
 @bp.route("/allreports")
 def allReports():
     return render_template(
-        "main/reports.html", title="All Reports", bannedIPs=BadIPReport.query.all()
+        "main/reports.html", title="All Reports", bannedIPs=IPReport.query.all()
     )
 
 
 @bp.route("/report", methods=["GET", "POST"])
-def reportBadIP():
-    form = AddBadIP()
+def reportIPAddr():
+    form = AddIPAddr()
     if form.validate_on_submit():
-        newreport = BadIPReport()
-        newreport.badIP = form.badIP.data
+        newreport = IPReport()
+        newreport.IPAddr = form.IPAddr.data
         newreport.notes = form.notes.data
         newreport.source = form.source.data
         newreport.reported = datetime.utcnow()
@@ -52,7 +52,7 @@ def reportBadIP():
         db.session.add(newreport)
         db.session.commit()
 
-        flash("Added BadIP report for {}".format(form.badIP.data))
+        flash("Added IPAddr report for {}".format(form.IPAddr.data))
     return render_template("main/add.html", title="Report bad IP address", form=form)
 
 

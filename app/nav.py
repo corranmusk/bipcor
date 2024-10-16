@@ -12,7 +12,7 @@ def mynavbar():
             "Reports",
             View("Summary", "main.summary"),
             View("List burrently banned", "main.currentlyBanned"),
-            View("Add Report", "main.reportBadIP"),
+            View("Add Report", "main.reportIPAddr"),
             View("All Reports", "main.allReports"),
         ),
         Subgroup(

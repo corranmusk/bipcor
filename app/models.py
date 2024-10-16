@@ -12,16 +12,16 @@ from sqlalchemy import desc
 #        return '<User {}>'.format(self.username)
 
 
-class BadIPReport(db.Model):
+class IPReport(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     source = db.Column(db.String(20), index=True)
-    badIP = db.Column(db.String(20), index=True)
+    IPAddr = db.Column(db.String(20), index=True)
     notes = db.Column(db.String(180))
     reported = db.Column(db.DateTime, default=datetime.utcnow())
     expires = db.Column(db.DateTime)
 
     def __repr__(self):
-        return "<BadIPReport {}>".format(self.id)
+        return "<IPReport {}>".format(self.id)
 
 
 class AccessToken(db.Model):
