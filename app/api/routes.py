@@ -3,7 +3,7 @@ from flask import abort, jsonify, make_response, request
 from app.api import bp
 from app.models import IPReport, AccessToken
 from app import db
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 
 @bp.errorhandler(404)
@@ -16,7 +16,7 @@ def currentlyBanned():
     return render_template(
         "api/banned.html",
         bannedIPs=db.session.query(IPReport.IPAddr)
-        .filter(IPReport.expires > datetime.utcnow())
+        .filter(IPReport.expires > datetime.now(timezone.utc))
         .distinct(),
     )
 
@@ -32,8 +32,8 @@ def reportIPAddr():
         newreport.IPAddr = IPAddr
         newreport.notes = notes
         newreport.source = reportingIP
-        newreport.reported = datetime.utcnow()
-        newreport.expires = datetime.utcnow() + timedelta(hours=6)
+        newreport.reported = datetime.now(timezone.utc)
+        newreport.expires = datetime.now(timezone.utc) + timedelta(hours=6)
         db.session.add(newreport)
         db.session.commit()
     else:
